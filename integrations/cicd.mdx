@@ -1,0 +1,320 @@
+---
+title: "CI/CD Integration"
+description: "Automate security testing in your deployment pipeline"
+icon: "arrows-rotate"
+---
+
+Integrate Indie Security into your CI/CD pipeline for continuous security testing on every deployment.
+
+## Overview
+
+<CardGroup cols={2}>
+  <Card title="Automated Scans" icon="robot">
+    Trigger security assessments on every deployment.
+  </Card>
+  <Card title="Pipeline Gates" icon="gate">
+    Block deployments with critical vulnerabilities.
+  </Card>
+  <Card title="PR Comments" icon="comment">
+    Security findings posted to pull requests.
+  </Card>
+  <Card title="Reports" icon="file-pdf">
+    Automatic report generation per build.
+  </Card>
+</CardGroup>
+
+## Quick Start
+
+```bash
+# Install CLI
+npm install -g @indiesecurity/cli
+
+# Authenticate
+indiesec auth login
+
+# Run scan
+indiesec scan --target target_123 --wait
+```
+
+## GitHub Actions
+
+<Steps>
+  <Step title="Add Secret">
+    Add your API key to GitHub Secrets:
+    
+    **Settings** → **Secrets** → **Actions** → **New repository secret**
+    
+    - Name: `INDIE_SECURITY_API_KEY`
+    - Value: `is_live_xxxxxxxxxxxxx`
+  </Step>
+  
+  <Step title="Create Workflow">
+    Create `.github/workflows/security.yml`:
+    
+    ```yaml
+    name: Security Assessment
+    
+    on:
+      push:
+        branches: [main]
+      pull_request:
+        branches: [main]
+    
+    jobs:
+      security-scan:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+          
+          - name: Run Indie Security Scan
+            uses: indiesecurity/github-action@v1
+            with:
+              api-key: ${{ secrets.INDIE_SECURITY_API_KEY }}
+              target-id: target_123
+              mode: quick
+              fail-on: critical,high
+          
+          - name: Upload Report
+            uses: actions/upload-artifact@v3
+            with:
+              name: security-report
+              path: security-report.pdf
+    ```
+  </Step>
+  
+  <Step title="Configure Settings">
+    Customize the action:
+    
+    | Option | Description | Default |
+    |--------|-------------|---------|
+    | `mode` | `quick`, `standard`, `deep` | `quick` |
+    | `fail-on` | Severities that fail the build | `critical` |
+    | `wait` | Wait for scan completion | `true` |
+    | `timeout` | Max wait time (minutes) | `30` |
+  </Step>
+</Steps>
+
+## GitLab CI
+
+```yaml
+# .gitlab-ci.yml
+
+stages:
+  - test
+  - security
+  - deploy
+
+security-scan:
+  stage: security
+  image: indiesecurity/cli:latest
+  script:
+    - indiesec auth login --api-key $INDIE_SECURITY_API_KEY
+    - indiesec scan --target target_123 --mode quick --wait
+    - indiesec report --format junit --output security-results.xml
+  artifacts:
+    reports:
+      junit: security-results.xml
+    paths:
+      - security-report.pdf
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+```
+
+## Jenkins
+
+```groovy
+// Jenkinsfile
+
+pipeline {
+    agent any
+    
+    environment {
+        INDIE_SECURITY_API_KEY = credentials('indie-security-api-key')
+    }
+    
+    stages {
+        stage('Security Scan') {
+            steps {
+                sh '''
+                    npm install -g @indiesecurity/cli
+                    indiesec auth login --api-key $INDIE_SECURITY_API_KEY
+                    indiesec scan --target target_123 --mode quick --wait
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'security-report.pdf'
+                    junit 'security-results.xml'
+                }
+            }
+        }
+    }
+    
+    post {
+        failure {
+            slackSend channel: '#security', 
+                      message: "Security scan failed: ${env.BUILD_URL}"
+        }
+    }
+}
+```
+
+## CLI Reference
+
+<AccordionGroup>
+  <Accordion title="indiesec auth">
+    ```bash
+    # Login with API key
+    indiesec auth login --api-key is_live_xxx
+    
+    # Check auth status
+    indiesec auth status
+    
+    # Logout
+    indiesec auth logout
+    ```
+  </Accordion>
+  
+  <Accordion title="indiesec scan">
+    ```bash
+    # Start scan and wait
+    indiesec scan --target target_123 --wait
+    
+    # Quick scan without waiting
+    indiesec scan --target target_123 --mode quick --no-wait
+    
+    # Deep scan with custom timeout
+    indiesec scan --target target_123 --mode deep --timeout 120
+    
+    # Scan specific URL (creates temporary target)
+    indiesec scan --url https://staging.example.com
+    ```
+  </Accordion>
+  
+  <Accordion title="indiesec report">
+    ```bash
+    # Generate PDF report
+    indiesec report --target target_123 --format pdf
+    
+    # Generate JUnit XML for CI
+    indiesec report --format junit --output results.xml
+    
+    # Get JSON for processing
+    indiesec report --format json --output results.json
+    ```
+  </Accordion>
+  
+  <Accordion title="indiesec check">
+    ```bash
+    # Check scan status
+    indiesec check --scan scan_456
+    
+    # Fail if critical issues exist
+    indiesec check --target target_123 --fail-on critical
+    
+    # Exit code interpretation:
+    # 0 = no issues at specified severity
+    # 1 = issues found at specified severity
+    # 2 = error running command
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Configuration File
+
+Create `.indiesec.yml` in your repository:
+
+```yaml
+# .indiesec.yml
+target: target_123
+mode: quick
+fail-on:
+  - critical
+  - high
+timeout: 30
+report:
+  format: pdf
+  path: ./security-report.pdf
+notifications:
+  slack:
+    webhook: $SLACK_WEBHOOK_URL
+    on: [failure, critical]
+```
+
+## Pipeline Gates
+
+Block deployments based on security findings:
+
+<Tabs>
+  <Tab title="Block on Critical">
+    ```yaml
+    # Only block on critical findings
+    fail-on: critical
+    ```
+    
+    <Warning>Most strict—only critical vulnerabilities stop deployment.</Warning>
+  </Tab>
+  <Tab title="Block on High+">
+    ```yaml
+    # Block on critical AND high
+    fail-on: critical,high
+    ```
+    
+    <Info>Recommended for production deployments.</Info>
+  </Tab>
+  <Tab title="Block on Medium+">
+    ```yaml
+    # Block on critical, high, AND medium
+    fail-on: critical,high,medium
+    ```
+    
+    <Tip>Use for staging environments to catch more issues early.</Tip>
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Staging vs Production">
+    - Run `deep` scans on staging before production release
+    - Run `quick` scans on production for continuous monitoring
+    - Use stricter gates for production deployments
+  </Accordion>
+  
+  <Accordion title="PR Integration">
+    Post findings as PR comments:
+    
+    ```yaml
+    - name: Comment on PR
+      uses: indiesecurity/pr-comment-action@v1
+      if: github.event_name == 'pull_request'
+    ```
+  </Accordion>
+  
+  <Accordion title="Parallel Scanning">
+    Run security scans in parallel with other tests:
+    
+    ```yaml
+    jobs:
+      tests:
+        # ... unit tests, etc.
+      
+      security:
+        # ... security scan
+        # runs in parallel
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="code" href="/api-reference/introduction">
+    Build custom integrations with the REST API.
+  </Card>
+  <Card title="Reports" icon="file-pdf" href="/guides/reports">
+    Customize automated report generation.
+  </Card>
+</CardGroup>

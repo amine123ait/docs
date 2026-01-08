@@ -1,0 +1,238 @@
+---
+title: "Authentication Setup"
+description: "Configure authentication for comprehensive security testing"
+icon: "key"
+---
+
+For thorough security testing, configure authentication so our AI agents can access protected areas of your application.
+
+## Why Authentication Matters
+
+Unauthenticated scans only test the public attack surface. Authenticated testing discovers:
+
+- Privilege escalation vulnerabilities
+- IDOR (Insecure Direct Object References)
+- Session management flaws
+- Post-login business logic bugs
+
+<Warning>
+  Up to 80% of critical vulnerabilities exist behind authentication walls.
+</Warning>
+
+## Setting Up Credentials
+
+<Steps>
+  <Step title="Create Test Accounts">
+    Create dedicated accounts for security testing:
+    
+    | Role | Purpose |
+    |------|---------|
+    | Standard User | Test normal user functionality |
+    | Admin User | Test admin-only features |
+    | Low-Privilege User | Test privilege escalation |
+    
+    <Warning>Never use production accounts with real data.</Warning>
+  </Step>
+  
+  <Step title="Navigate to Target Settings">
+    Go to **Targets** → Select your target → **Authentication** tab.
+  </Step>
+  
+  <Step title="Add Credentials">
+    Enter username and password for each test account:
+    
+    ```json
+    {
+      "credentials": [
+        {
+          "role": "user",
+          "username": "testuser@example.com",
+          "password": "SecureTestPass123!"
+        },
+        {
+          "role": "admin",
+          "username": "testadmin@example.com", 
+          "password": "AdminTestPass456!"
+        }
+      ]
+    }
+    ```
+  </Step>
+  
+  <Step title="Write Login Instructions">
+    Describe the login flow for the AI agent:
+    
+    ```text
+    1. Navigate to https://app.example.com/login
+    2. Enter the username in the "Email" field
+    3. Enter the password in the "Password" field
+    4. Click the "Sign In" button
+    5. Wait for redirect to /dashboard
+    6. Verify login by checking for "Welcome" text
+    ```
+    
+    <Tip>Be specific about field names, button text, and success indicators.</Tip>
+  </Step>
+</Steps>
+
+## Login Instruction Best Practices
+
+<AccordionGroup>
+  <Accordion title="Be Specific About Selectors">
+    ❌ "Enter email and password"
+    
+    ✅ "Enter email in the field labeled 'Email Address' and password in the field labeled 'Password'"
+  </Accordion>
+  
+  <Accordion title="Include Wait Conditions">
+    ❌ "Click login"
+    
+    ✅ "Click the 'Sign In' button and wait for the URL to change to /dashboard"
+  </Accordion>
+  
+  <Accordion title="Handle MFA When Present">
+    If your app uses MFA, describe how to handle it:
+    
+    ```text
+    After entering credentials:
+    1. If MFA prompt appears, use the TOTP code from the authenticator
+    2. TOTP Secret: JBSWY3DPEHPK3PXP
+    3. Enter the 6-digit code and click "Verify"
+    ```
+  </Accordion>
+  
+  <Accordion title="Describe Error Recovery">
+    ```text
+    If login fails:
+    1. Check if "Invalid credentials" message appears
+    2. If CAPTCHA appears, wait 60 seconds and retry
+    3. If account locked message appears, use backup account
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Authentication Methods
+
+<Tabs>
+  <Tab title="Form-Based">
+    Standard username/password forms:
+    
+    ```text
+    1. Go to /login
+    2. Enter username in #email field
+    3. Enter password in #password field
+    4. Click button with text "Log In"
+    ```
+  </Tab>
+  
+  <Tab title="OAuth/SSO">
+    For OAuth providers (Google, GitHub, etc.):
+    
+    ```text
+    1. Go to /login
+    2. Click "Sign in with Google"
+    3. On Google page, enter test account email
+    4. Enter password
+    5. Click "Sign In"
+    6. Wait for redirect back to application
+    ```
+    
+    <Info>Provide OAuth test account credentials in the credentials section.</Info>
+  </Tab>
+  
+  <Tab title="API Key/Token">
+    For API-based authentication:
+    
+    ```json
+    {
+      "auth_type": "bearer",
+      "token": "eyJhbGciOiJIUzI1NiIs...",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Session Cookie">
+    Pre-captured session:
+    
+    ```json
+    {
+      "auth_type": "cookie",
+      "cookies": [
+        {
+          "name": "session_id",
+          "value": "abc123xyz",
+          "domain": ".example.com"
+        }
+      ]
+    }
+    ```
+    
+    <Warning>Session cookies expire. Use the Burp Extension for long assessments.</Warning>
+  </Tab>
+</Tabs>
+
+## Multi-Factor Authentication
+
+<AccordionGroup>
+  <Accordion title="TOTP (Authenticator Apps)">
+    Provide the TOTP secret for automated MFA handling:
+    
+    ```json
+    {
+      "mfa_type": "totp",
+      "secret": "JBSWY3DPEHPK3PXP"
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="SMS/Email OTP">
+    For SMS or email OTP, we recommend:
+    - Using a test account with MFA disabled
+    - Or using our webhook integration to receive OTPs
+  </Accordion>
+  
+  <Accordion title="Hardware Keys">
+    Hardware keys (YubiKey, etc.) cannot be automated. Options:
+    - Use accounts without hardware MFA for testing
+    - Capture authenticated session manually via Burp Extension
+  </Accordion>
+</AccordionGroup>
+
+## Session Management
+
+The AI agent automatically:
+
+- Detects session expiration
+- Re-authenticates when needed
+- Handles CSRF tokens
+- Manages concurrent sessions
+
+<Tip>
+  For long-running assessments, ensure test accounts don't have session limits that could interrupt testing.
+</Tip>
+
+## Verification
+
+After configuring authentication, verify it works:
+
+1. Go to **Targets** → Your Target → **Authentication**
+2. Click **Test Authentication**
+3. Review the authentication trace
+4. Confirm successful login indicator
+
+<Check>
+  Green checkmark indicates authentication is working correctly.
+</Check>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Start Spider Phase" icon="spider" href="/guides/spider-phase">
+    Begin mapping your authenticated application surface.
+  </Card>
+  <Card title="Browser Extension" icon="puzzle-piece" href="/integrations/browser-extension">
+    Capture complex auth flows with the Burp Extension.
+  </Card>
+</CardGroup>

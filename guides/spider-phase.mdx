@@ -1,0 +1,158 @@
+---
+title: "Spider Phase"
+description: "Phase 1: Comprehensive application surface mapping"
+icon: "spider"
+---
+
+Phase 1 of Indie Security's assessment process focuses on mapping your entire application surface. This comprehensive crawling phase discovers endpoints, parameters, and application flows before security testing begins.
+
+## Overview
+
+The Spider Phase uses a combination of human researchers and AI crawlers to maximize coverage:
+
+<Columns cols={2}>
+  <Card title="Human Researchers" icon="user-secret">
+    Use the Burp Extension to capture traffic from manual exploration of complex workflows.
+  </Card>
+  <Card title="ECHO-01 Crawler" icon="robot">
+    AI-powered crawler that navigates applications intelligently and discovers hidden endpoints.
+  </Card>
+</Columns>
+
+## Spider Modes
+
+<Tabs>
+  <Tab title="Quick">
+    **Duration**: 15-30 minutes
+    
+    Fast surface mapping for rapid assessment. Best for:
+    - Known applications with simple architecture
+    - Quick verification scans
+    - CI/CD pipeline integration
+    
+    ```bash
+    # API equivalent
+    POST /api/assessments
+    {
+      "target_id": "target_123",
+      "phase": "spider",
+      "mode": "quick"
+    }
+    ```
+  </Tab>
+  <Tab title="Standard">
+    **Duration**: 1-2 hours
+    
+    Thorough crawl with state-aware navigation. Best for:
+    - Regular security assessments
+    - Applications with moderate complexity
+    - Most common use case
+  </Tab>
+  <Tab title="Deep">
+    **Duration**: Several hours
+    
+    Complete enumeration with exhaustive parameter fuzzing. Best for:
+    - Pre-release security reviews
+    - Complex enterprise applications
+    - Compliance requirements
+  </Tab>
+</Tabs>
+
+## What Gets Discovered
+
+<AccordionGroup>
+  <Accordion title="Endpoints & URLs">
+    - All accessible pages and routes
+    - REST API endpoints
+    - GraphQL operations
+    - WebSocket connections
+    - Hidden admin panels
+  </Accordion>
+  <Accordion title="Parameters & Inputs">
+    - Query string parameters
+    - POST body fields
+    - HTTP headers
+    - Cookie values
+    - File upload points
+  </Accordion>
+  <Accordion title="Application Flows">
+    - Authentication sequences
+    - Multi-step forms
+    - State machine transitions
+    - Business workflows
+  </Accordion>
+  <Accordion title="Technology Stack">
+    - Framework detection
+    - Server identification
+    - JavaScript libraries
+    - API patterns (REST, GraphQL, gRPC)
+  </Accordion>
+</AccordionGroup>
+
+## Burp Extension Integration
+
+Capture authenticated sessions and complex user flows:
+
+<Steps>
+  <Step title="Install Extension">
+    Download and install the Indie Security Burp extension from the dashboard.
+    
+    [Download Extension →](/integrations/browser-extension)
+  </Step>
+  <Step title="Connect to Session">
+    Enter your API key and target ID to link the extension with your assessment.
+    
+    ```text
+    API Key: is_live_xxxxxxxxxxxxx
+    Target ID: target_123
+    ```
+  </Step>
+  <Step title="Capture Traffic">
+    Browse your application normally. All traffic is captured and sent to the knowledge graph.
+    
+    <Tip>Focus on authenticated areas and complex workflows that automated crawlers might miss.</Tip>
+  </Step>
+  <Step title="Mark Auth Flows">
+    Use the extension to mark login sequences so the AI can replicate authentication.
+  </Step>
+</Steps>
+
+## Spider Results
+
+After completion, you'll have access to:
+
+<CardGroup cols={2}>
+  <Card title="Surface Map" icon="map">
+    Visual representation of discovered endpoints and their relationships.
+  </Card>
+  <Card title="Parameter Inventory" icon="list">
+    Complete list of all discovered input points.
+  </Card>
+  <Card title="Tech Stack Report" icon="layer-group">
+    Identified technologies, frameworks, and potential attack vectors.
+  </Card>
+  <Card title="Coverage Metrics" icon="chart-pie">
+    Statistics on pages visited, endpoints found, and code coverage.
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+<Warning>
+  Always use dedicated test accounts for crawling. Never use production admin credentials.
+</Warning>
+
+<Tip>
+  **Maximize coverage by:**
+  - Completing complex workflows manually with Burp Extension
+  - Providing multiple user roles for testing
+  - Including API documentation if available
+</Tip>
+
+## Next Steps
+
+Once the Spider Phase completes, proceed to the Analysis Phase:
+
+<Card title="Analysis Phase" icon="magnifying-glass" href="/guides/analysis-phase">
+  Begin AI-powered vulnerability testing on your mapped surface.
+</Card>

@@ -1,0 +1,173 @@
+---
+title: "Browser Extension"
+description: "Capture authenticated sessions with the Indie Security Burp Extension"
+icon: "puzzle-piece"
+---
+
+The Indie Security browser extension integrates with Burp Suite to capture authenticated sessions and complex user flows.
+
+## Overview
+
+<CardGroup cols={2}>
+  <Card title="Session Capture" icon="cookie">
+    Record authenticated browsing sessions for the AI to replay.
+  </Card>
+  <Card title="Auth Flow Recording" icon="right-to-bracket">
+    Mark login sequences so the AI can authenticate automatically.
+  </Card>
+  <Card title="Traffic Analysis" icon="chart-line">
+    All captured traffic feeds into the knowledge graph.
+  </Card>
+  <Card title="Real-Time Sync" icon="rotate">
+    Traffic syncs instantly with your Indie Security assessment.
+  </Card>
+</CardGroup>
+
+## Installation
+
+<Steps>
+  <Step title="Download Extension">
+    Download the extension from your dashboard:
+    
+    **Dashboard** → **Integrations** → **Browser Extension** → **Download**
+  </Step>
+  
+  <Step title="Install in Burp Suite">
+    1. Open Burp Suite
+    2. Go to **Extensions** → **Installed**
+    3. Click **Add**
+    4. Select **Extension Type**: Java
+    5. Choose the downloaded `.jar` file
+    6. Click **Next**
+    
+    <Check>Extension appears in the Extensions list with status "Loaded".</Check>
+  </Step>
+  
+  <Step title="Configure Connection">
+    Configure the extension with your API credentials:
+    
+    1. Go to the **Indie Security** tab in Burp
+    2. Enter your API key: `is_live_xxxxxxxxxxxxx`
+    3. Enter target ID: `target_123`
+    4. Click **Connect**
+    
+    <Tip>Find your API key in **Dashboard** → **Settings** → **API Keys**.</Tip>
+  </Step>
+</Steps>
+
+## Usage
+
+### Capturing Traffic
+
+<Tabs>
+  <Tab title="Passive Capture">
+    Simply browse your application with Burp proxy enabled. All traffic is automatically captured and sent to Indie Security.
+    
+    <Info>Passive capture works in the background—no additional action needed.</Info>
+  </Tab>
+  <Tab title="Active Recording">
+    For focused recording:
+    
+    1. Click **Start Recording** in the Indie Security tab
+    2. Perform the actions you want captured
+    3. Click **Stop Recording**
+    4. Give the recording a name (e.g., "Checkout Flow")
+  </Tab>
+</Tabs>
+
+### Marking Auth Flows
+
+Record authentication sequences so the AI can replicate login:
+
+<Steps>
+  <Step title="Start Auth Recording">
+    Click **Record Auth Flow** before logging in.
+  </Step>
+  <Step title="Perform Login">
+    Log into your application normally.
+  </Step>
+  <Step title="Stop Recording">
+    Click **Stop Recording** after successful login.
+  </Step>
+  <Step title="Verify">
+    The extension shows captured:
+    - Login URL
+    - Form fields
+    - Success indicators
+  </Step>
+</Steps>
+
+<Warning>
+  Auth flows are encrypted and stored securely. They're only used by AI agents during assessments.
+</Warning>
+
+## Features
+
+<AccordionGroup>
+  <Accordion title="Request/Response Capture">
+    Full HTTP traffic including:
+    - Headers
+    - Cookies
+    - Request bodies
+    - Response content
+    - Timing information
+  </Accordion>
+  <Accordion title="Session Tokens">
+    Automatic extraction of:
+    - Session cookies
+    - JWT tokens
+    - CSRF tokens
+    - Custom auth headers
+  </Accordion>
+  <Accordion title="Scope Filtering">
+    Configure which domains to capture:
+    
+    ```text
+    # Include patterns
+    *.example.com
+    api.example.com
+    
+    # Exclude patterns
+    analytics.example.com
+    cdn.example.com
+    ```
+  </Accordion>
+  <Accordion title="Sync Status">
+    Real-time sync status showing:
+    - Requests captured
+    - Upload queue
+    - Sync errors
+    - Connection status
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Extension not loading">
+    - Ensure you're using Burp Suite Professional or Community
+    - Verify Java version compatibility (Java 11+)
+    - Check for conflicting extensions
+  </Accordion>
+  <Accordion title="Connection failed">
+    - Verify API key is correct
+    - Check target ID exists
+    - Ensure network connectivity to `api.indiesecurity.com`
+  </Accordion>
+  <Accordion title="Traffic not syncing">
+    - Check scope includes your target domain
+    - Verify proxy is intercepting traffic
+    - Review sync queue for errors
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Spider Phase" icon="spider" href="/guides/spider-phase">
+    Start crawling with captured sessions.
+  </Card>
+  <Card title="Authentication Setup" icon="key" href="/guides/authentication">
+    Configure authentication for AI agents.
+  </Card>
+</CardGroup>

@@ -1,0 +1,138 @@
+---
+title: "Dashboard"
+description: "Monitor your security posture and manage assessments"
+icon: "gauge-high"
+---
+
+The Indie Security dashboard provides real-time visibility into your security posture across all targets.
+
+## Dashboard Overview
+
+<Frame>
+  Your dashboard displays key metrics and active assessments at a glance.
+</Frame>
+
+## Key Metrics
+
+<CardGroup cols={4}>
+  <Card title="Total Findings" icon="bug">
+    Count of all discovered vulnerabilities across targets.
+  </Card>
+  <Card title="Critical Issues" icon="triangle-exclamation">
+    High-priority vulnerabilities requiring immediate attention.
+  </Card>
+  <Card title="Active Scans" icon="spinner">
+    Currently running assessments.
+  </Card>
+  <Card title="Coverage" icon="chart-pie">
+    Percentage of application surface tested.
+  </Card>
+</CardGroup>
+
+## Sections
+
+<Tabs>
+  <Tab title="Overview">
+    The main dashboard showing:
+    - Security posture score
+    - Vulnerability trend charts
+    - Recent findings
+    - Active assessments status
+  </Tab>
+  <Tab title="Targets">
+    Manage your target applications:
+    - Add/edit target configurations
+    - Configure authentication
+    - Schedule recurring assessments
+    - View target-specific metrics
+  </Tab>
+  <Tab title="Vulnerabilities">
+    Browse and manage findings:
+    - Filter by severity, type, target
+    - Bulk status updates
+    - Export capabilities
+    - Remediation tracking
+  </Tab>
+  <Tab title="Reports">
+    Generate stakeholder reports:
+    - PDF export
+    - Executive summaries
+    - Technical details
+    - Compliance mapping
+  </Tab>
+</Tabs>
+
+## Target Management
+
+<Steps>
+  <Step title="Add New Target">
+    Click **+ Add Target** and enter:
+    - Target name
+    - Root domain/URL
+    - Description
+    - Environment type (Production/Staging/Development)
+  </Step>
+  <Step title="Configure Settings">
+    Set up:
+    - Authentication credentials
+    - Scope restrictions
+    - Excluded paths
+    - Rate limiting preferences
+  </Step>
+  <Step title="Schedule Assessments">
+    Configure recurring scans:
+    - Daily/Weekly/Monthly frequency
+    - Assessment mode (Auto/Vuln Testing/APT)
+    - Notification preferences
+  </Step>
+</Steps>
+
+## Real-Time Monitoring
+
+During active assessments, monitor:
+
+| Metric | Description |
+|--------|-------------|
+| Progress | Percentage of endpoints tested |
+| Findings | Running count of discovered vulnerabilities |
+| Coverage | Attack surface coverage percentage |
+| Duration | Elapsed and estimated remaining time |
+
+<Tip>
+  Enable browser notifications to receive alerts when critical vulnerabilities are discovered.
+</Tip>
+
+## Filters and Search
+
+Find specific data quickly:
+
+```text
+# Search examples
+severity:critical target:production
+type:xss status:open
+discovered:last-7-days
+```
+
+## Notifications
+
+Configure alerts for:
+
+- New critical/high vulnerabilities
+- Assessment completion
+- Failed authentication
+- Scheduled scan reminders
+
+<Info>
+  Notifications can be sent via email, Slack, or webhook integration.
+</Info>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Managing Findings" icon="list-check" href="/guides/findings">
+    Learn to triage and remediate vulnerabilities.
+  </Card>
+  <Card title="Generate Reports" icon="file-pdf" href="/guides/reports">
+    Create stakeholder-ready documentation.
+  </Card>
+</CardGroup>

@@ -1,0 +1,160 @@
+---
+title: "Managing Findings"
+description: "Triage, prioritize, and remediate discovered vulnerabilities"
+icon: "list-check"
+---
+
+Effectively managing vulnerability findings is crucial for improving your security posture. This guide covers the complete findings workflow.
+
+## Findings Overview
+
+Each finding includes:
+
+<CardGroup cols={2}>
+  <Card title="Severity Rating" icon="gauge">
+    Critical, High, Medium, Low, Informational
+  </Card>
+  <Card title="Vulnerability Type" icon="tag">
+    Category (XSS, SQLi, IDOR, etc.)
+  </Card>
+  <Card title="Evidence" icon="camera">
+    Screenshots, requests, payloads
+  </Card>
+  <Card title="Remediation" icon="wrench">
+    Step-by-step fix guidance
+  </Card>
+</CardGroup>
+
+## Severity Levels
+
+| Level | Description | SLA Recommendation |
+|-------|-------------|-------------------|
+| **Critical** | Immediate exploitation risk, data breach potential | Fix within 24 hours |
+| **High** | Significant security impact | Fix within 7 days |
+| **Medium** | Moderate risk with mitigating factors | Fix within 30 days |
+| **Low** | Minor security concern | Fix within 90 days |
+| **Informational** | Best practice recommendations | Review at discretion |
+
+## Finding Details
+
+<AccordionGroup>
+  <Accordion title="Summary">
+    Brief description of the vulnerability and its impact.
+  </Accordion>
+  <Accordion title="Technical Details">
+    - Affected endpoint
+    - Vulnerable parameter
+    - Attack payload used
+    - Request/response data
+  </Accordion>
+  <Accordion title="Proof of Concept">
+    Working exploit demonstrating the vulnerability:
+    
+    ```bash
+    curl -X POST 'https://example.com/api/users' \
+      -d "id=1' OR '1'='1"
+    ```
+  </Accordion>
+  <Accordion title="Business Impact">
+    Analysis of how this vulnerability affects your business:
+    - Data exposure risk
+    - Compliance implications
+    - Reputation impact
+  </Accordion>
+  <Accordion title="Remediation Steps">
+    Specific guidance for fixing the vulnerability with code examples.
+  </Accordion>
+</AccordionGroup>
+
+## Workflow States
+
+<Steps>
+  <Step title="New">
+    Newly discovered vulnerability awaiting review.
+  </Step>
+  <Step title="Confirmed">
+    Validated by team, acknowledged as genuine issue.
+  </Step>
+  <Step title="In Progress">
+    Fix is being developed.
+  </Step>
+  <Step title="Fixed">
+    Remediation deployed, awaiting verification.
+  </Step>
+  <Step title="Verified">
+    Retest confirmed the fix is effective.
+  </Step>
+</Steps>
+
+## Filtering Findings
+
+Use filters to focus on what matters:
+
+```text
+# Filter examples
+severity:critical,high
+status:new,confirmed
+target:production-app
+type:injection
+discovered:this-week
+```
+
+## Bulk Operations
+
+Manage multiple findings at once:
+
+- **Bulk Status Update**: Move multiple findings to new state
+- **Bulk Assignment**: Assign to team member
+- **Bulk Export**: Download selected findings
+- **Bulk Ignore**: Mark false positives
+
+<Warning>
+  Use bulk ignore carefully. Document reasons for ignoring findings.
+</Warning>
+
+## Retesting
+
+After applying fixes:
+
+1. Mark finding as **Fixed**
+2. Click **Request Retest**
+3. AI agent verifies the fix
+4. Finding moves to **Verified** or returns to **Confirmed**
+
+<Tip>
+  Automated retesting runs during each assessment to catch regressions.
+</Tip>
+
+## False Positives
+
+If a finding is not a genuine vulnerability:
+
+1. Click **Mark as False Positive**
+2. Add justification explaining why
+3. Finding is excluded from future reports
+4. AI learns from feedback to reduce similar false positives
+
+## Integration with Issue Trackers
+
+Export findings to:
+
+- Jira
+- GitHub Issues
+- GitLab Issues
+- Linear
+- Custom webhooks
+
+<Info>
+  Configure integrations in **Settings** → **Integrations**.
+</Info>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Generate Reports" icon="file-pdf" href="/guides/reports">
+    Create stakeholder-ready documentation.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/introduction">
+    Automate findings management via API.
+  </Card>
+</CardGroup>

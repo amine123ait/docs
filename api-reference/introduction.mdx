@@ -1,33 +1,178 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'API Introduction'
+description: 'Programmatic access to Indie Security assessments and findings'
+icon: 'code'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+The Indie Security API enables programmatic access to security assessments, findings, and reports.
 
-## Welcome
+## Base URL
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+```
+https://api.indiesecurity.com/v1
+```
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API requests require a Bearer token in the Authorization header:
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+```bash
+curl -X GET 'https://api.indiesecurity.com/v1/targets' \
+  -H 'Authorization: Bearer is_live_xxxxxxxxxxxxx'
 ```
+
+<Warning>
+  Keep your API keys secure. Never commit them to version control.
+</Warning>
+
+### Getting Your API Key
+
+1. Navigate to **Dashboard** → **Settings** → **API Keys**
+2. Click **Generate New Key**
+3. Copy and store the key securely
+
+<Info>
+  API keys are scoped to your organization. All users share the same key.
+</Info>
+
+## Rate Limits
+
+| Tier | Requests/Minute | Concurrent Scans |
+|------|-----------------|------------------|
+| Free | 60 | 1 |
+| Pro | 300 | 5 |
+| Enterprise | Unlimited | Unlimited |
+
+Rate limit headers are included in all responses:
+
+```
+X-RateLimit-Limit: 300
+X-RateLimit-Remaining: 299
+X-RateLimit-Reset: 1640995200
+```
+
+## Response Format
+
+All responses are JSON:
+
+<ResponseExample>
+```json Success Response
+{
+  "success": true,
+  "data": {
+    // Response data
+  },
+  "meta": {
+    "request_id": "req_abc123",
+    "timestamp": "2024-01-15T10:30:00Z"
+  }
+}
+```
+</ResponseExample>
+
+<ResponseExample>
+```json Error Response
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid target_id format",
+    "details": {
+      "field": "target_id",
+      "expected": "UUID v4"
+    }
+  },
+  "meta": {
+    "request_id": "req_abc123"
+  }
+}
+```
+</ResponseExample>
+
+## Error Codes
+
+| Code | HTTP Status | Description |
+|------|-------------|-------------|
+| `UNAUTHORIZED` | 401 | Invalid or missing API key |
+| `FORBIDDEN` | 403 | Insufficient permissions |
+| `NOT_FOUND` | 404 | Resource not found |
+| `VALIDATION_ERROR` | 422 | Invalid request parameters |
+| `RATE_LIMITED` | 429 | Too many requests |
+| `SERVER_ERROR` | 500 | Internal server error |
+
+## SDKs
+
+<CardGroup cols={3}>
+  <Card title="Python" icon="python" href="https://github.com/indiesecurity/python-sdk">
+    `pip install indiesecurity`
+  </Card>
+  <Card title="Node.js" icon="node-js" href="https://github.com/indiesecurity/node-sdk">
+    `npm install @indiesecurity/sdk`
+  </Card>
+  <Card title="CLI" icon="terminal" href="https://github.com/indiesecurity/cli">
+    `npm install -g @indiesecurity/cli`
+  </Card>
+</CardGroup>
+
+## Quick Examples
+
+<CodeGroup>
+```python Python
+from indiesecurity import Client
+
+client = Client(api_key="is_live_xxx")
+
+# List targets
+targets = client.targets.list()
+
+# Start assessment
+assessment = client.assessments.create(
+    target_id="target_123",
+    mode="quick"
+)
+
+# Get findings
+findings = client.findings.list(target_id="target_123")
+```
+
+```javascript Node.js
+import { IndieSecurity } from '@indiesecurity/sdk';
+
+const client = new IndieSecurity({ apiKey: 'is_live_xxx' });
+
+// List targets
+const targets = await client.targets.list();
+
+// Start assessment
+const assessment = await client.assessments.create({
+  targetId: 'target_123',
+  mode: 'quick'
+});
+
+// Get findings
+const findings = await client.findings.list({ targetId: 'target_123' });
+```
+
+```bash cURL
+# List targets
+curl -X GET 'https://api.indiesecurity.com/v1/targets' \
+  -H 'Authorization: Bearer is_live_xxx'
+
+# Start assessment
+curl -X POST 'https://api.indiesecurity.com/v1/assessments' \
+  -H 'Authorization: Bearer is_live_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{"target_id": "target_123", "mode": "quick"}'
+```
+</CodeGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Targets Endpoint" icon="bullseye" href="/api-reference/endpoint/get">
+    Manage target applications.
+  </Card>
+  <Card title="CI/CD Integration" icon="arrows-rotate" href="/integrations/cicd">
+    Automate security in your pipeline.
+  </Card>
+</CardGroup>

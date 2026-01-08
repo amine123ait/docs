@@ -1,0 +1,169 @@
+---
+title: "Reports"
+description: "Generate stakeholder-ready security reports"
+icon: "file-pdf"
+---
+
+Create professional security reports for stakeholders, compliance, and internal tracking.
+
+## Report Types
+
+<CardGroup cols={2}>
+  <Card title="Executive Summary" icon="briefcase">
+    High-level overview for leadership and non-technical stakeholders.
+  </Card>
+  <Card title="Technical Report" icon="code">
+    Detailed findings with proof-of-concept exploits for development teams.
+  </Card>
+  <Card title="Compliance Report" icon="shield-check">
+    Findings mapped to compliance frameworks (OWASP, PCI-DSS, SOC2).
+  </Card>
+  <Card title="Delta Report" icon="arrows-left-right">
+    Changes since last assessment—new, fixed, and recurring issues.
+  </Card>
+</CardGroup>
+
+## Generating Reports
+
+<Steps>
+  <Step title="Navigate to Reports">
+    Go to **Reports** → **Generate New Report**.
+  </Step>
+  <Step title="Select Target(s)">
+    Choose which targets to include in the report.
+  </Step>
+  <Step title="Choose Report Type">
+    Select Executive Summary, Technical, or Compliance format.
+  </Step>
+  <Step title="Configure Options">
+    - Date range
+    - Severity filter
+    - Include/exclude sections
+    - Branding options
+  </Step>
+  <Step title="Generate & Download">
+    Click **Generate Report** and download as PDF.
+  </Step>
+</Steps>
+
+## Report Sections
+
+<AccordionGroup>
+  <Accordion title="Executive Summary">
+    - Overall security score
+    - Risk assessment summary
+    - Key findings overview
+    - Trend analysis
+    - Recommended priorities
+  </Accordion>
+  <Accordion title="Findings Detail">
+    Each vulnerability includes:
+    - Description and impact
+    - Affected endpoints
+    - Severity and CVSS score
+    - Proof of concept
+    - Remediation guidance
+    - Screenshots/evidence
+  </Accordion>
+  <Accordion title="Compliance Mapping">
+    Findings mapped to:
+    - OWASP Top 10
+    - CWE categories
+    - PCI-DSS requirements
+    - SOC 2 controls
+  </Accordion>
+  <Accordion title="Appendices">
+    - Full request/response logs
+    - Scan configuration
+    - Coverage statistics
+    - Methodology description
+  </Accordion>
+</AccordionGroup>
+
+## Customization
+
+<Tabs>
+  <Tab title="Branding">
+    Add your company branding:
+    - Custom logo
+    - Company name
+    - Color scheme
+    - Footer text
+    
+    Configure in **Settings** → **Report Branding**.
+  </Tab>
+  <Tab title="Templates">
+    Create reusable templates:
+    - Define default sections
+    - Set severity filters
+    - Configure compliance frameworks
+    - Save as template for future use
+  </Tab>
+  <Tab title="Scheduling">
+    Automate report generation:
+    - Weekly/monthly schedules
+    - Auto-email to stakeholders
+    - Slack/Teams notifications
+  </Tab>
+</Tabs>
+
+## Export Formats
+
+| Format | Use Case |
+|--------|----------|
+| **PDF** | Stakeholder presentations, compliance audits |
+| **JSON** | Integration with other tools |
+| **CSV** | Spreadsheet analysis |
+| **HTML** | Web-based viewing |
+
+## API Access
+
+Generate reports programmatically:
+
+<CodeGroup>
+```bash cURL
+curl -X POST 'https://api.indiesecurity.com/v1/reports' \
+  -H 'Authorization: Bearer YOUR_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "target_ids": ["target_123"],
+    "type": "technical",
+    "format": "pdf",
+    "date_range": {
+      "from": "2024-01-01",
+      "to": "2024-01-31"
+    }
+  }'
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    'https://api.indiesecurity.com/v1/reports',
+    headers={'Authorization': 'Bearer YOUR_API_KEY'},
+    json={
+        'target_ids': ['target_123'],
+        'type': 'technical',
+        'format': 'pdf'
+    }
+)
+
+report_url = response.json()['download_url']
+```
+</CodeGroup>
+
+<Tip>
+  Reports are retained for 90 days. Download important reports for long-term storage.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="code" href="/api-reference/introduction">
+    Automate report generation.
+  </Card>
+  <Card title="CI/CD Integration" icon="arrows-rotate" href="/integrations/cicd">
+    Include reports in your deployment pipeline.
+  </Card>
+</CardGroup>

@@ -1,80 +1,111 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: "Quick Start"
+description: "Run your first security assessment in under 10 minutes"
+icon: "rocket"
 ---
 
-## Get started in three steps
+Get started with Indie Security and run your first comprehensive security assessment.
 
-Get your documentation site running locally and make your first customization.
+## Your First Assessment
 
-### Step 1: Set up your local environment
+<Steps>
+<Step title="Sign Up & Access Dashboard">
+  Create your account at [app.indiesecurity.com](https://app.indiesecurity.com) and log in to your dashboard.
+  
+  <Check>
+  You'll see the main dashboard with Target Management and Active Assessments sections.
+  </Check>
+</Step>
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+<Step title="Add Your First Target">
+  Navigate to **Targets** and click **Add Target**:
+  
+  - **Target Name**: Give your target a descriptive name (e.g., "Production Web App")
+  - **Domain**: Enter the URL to test (e.g., `https://app.yourcompany.com`)
+  - **Description**: Add context about what this application does
+  
+  ```
+  https://app.yourcompany.com
+  ```
+  
+  <Tip>Start with a staging environment for your first assessment.</Tip>
+</Step>
 
-### Step 2: Deploy your changes
+<Step title="Configure Authentication (Recommended)">
+  For comprehensive testing, configure authentication:
+  
+  1. Add test account credentials (username and password)
+  2. Write login instructions for the AI agent
+  
+  ```text
+  1. Go to https://yourcompany.com/login
+  2. Enter username and password
+  3. Click "Sign In"
+  4. After login, you'll be redirected to the dashboard
+  ```
+  
+  <Warning>
+  Use dedicated test accounts—never use production admin credentials.
+  </Warning>
+  
+  [Learn more about authentication setup →](/guides/authentication)
+</Step>
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+<Step title="Start Spider Phase">
+  Begin Phase 1 to map your application surface:
+  
+  1. Select your verified target
+  2. Choose **Spider Mode**:
+     - **Quick**: Fast surface mapping (15-30 min)
+     - **Standard**: Thorough crawl (1-2 hours)
+     - **Deep**: Complete enumeration (several hours)
+  3. Click **Start Spider**
+  
+  <Info>
+  The ECHO-01 AI Crawler will map endpoints, parameters, and application flows.
+  </Info>
+</Step>
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+<Step title="Run Analysis Phase">
+  Once Spider completes, start Phase 2:
+  
+  1. Review discovered attack surface
+  2. Select analysis mode:
+     - **Auto Mode**: AI-driven comprehensive testing
+     - **Vuln Testing**: Focused vulnerability scanning
+     - **APT/Adv**: Advanced persistent threat simulation
+  3. Click **Start Analysis**
+</Step>
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+<Step title="Review Findings">
+  Monitor results in real-time:
+  
+  - View findings in the **Vulnerabilities** section
+  - Each finding includes:
+    - Severity rating and business impact
+    - Proof-of-concept exploitation evidence
+    - Step-by-step remediation guidance
+  - Generate PDF reports for stakeholders
+</Step>
+</Steps>
 
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
+## Next Steps
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Platform Overview" icon="sitemap" href="/guides/platform-overview">
+    Understand the ECHO-01 architecture and AI agents.
+  </Card>
+  <Card title="Spider Phase" icon="spider" href="/guides/spider-phase">
+    Learn about comprehensive surface mapping.
+  </Card>
+  <Card title="Analysis Phase" icon="magnifying-glass" href="/guides/analysis-phase">
+    Deep dive into AI-powered vulnerability analysis.
+  </Card>
+  <Card title="Dashboard Guide" icon="gauge" href="/guides/dashboard">
+    Master the security dashboard.
+  </Card>
 </CardGroup>
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  **Need help?** Contact [support@indiesecurity.com](mailto:support@indiesecurity.com) for assistance.
 </Note>
